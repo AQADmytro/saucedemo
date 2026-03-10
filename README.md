@@ -15,10 +15,11 @@ sauce-demo/
 ├── components/
 │   ├── index.ts                  # Barrel export
 │   ├── cart-badge.component.ts   # Cart badge
-│   ├── cart-items.component.ts   # Cart item list actions
+│   ├── cart-items.component.ts   # Cart item
 │   └── menu.component.ts         # Burger menu actions
 ├── pages/
 │   ├── index.ts                  # Barrel export
+│   ├── base.page.ts
 │   ├── login.page.ts
 │   ├── products.page.ts
 │   ├── product-detail.page.ts
@@ -36,6 +37,9 @@ sauce-demo/
 │   └── test-cases/
 │       ├── auth.cases.ts         # Data-driven auth error cases
 │       └── checkout.cases.ts     # Data-driven checkout validation cases
+├── types/
+│   ├── product.type.ts
+│   └── checkout.type.ts
 ├── utils/
 │   └── price.helper.ts           # Price calculation helpers
 ├── tests/
@@ -44,7 +48,7 @@ sauce-demo/
 │   ├── cart.spec.ts
 │   ├── checkout.spec.ts
 │   └── burger-menu.spec.ts
-├── global-setup.ts               # Cleans test artefact before each run
+├── global-setup.ts               # Cleans test artefacts before each run
 ├── playwright.config.ts
 ├── BUG_REPORT.md                 # Manual testing findings
 ├── eslint.config.cjs
@@ -81,11 +85,18 @@ npm run test:headed             # all tests (with browser)
 
 ### Page Object Model
 
-Each page is represented by a dedicated class. Locators are defined as `private readonly` properties. Methods describe user actions, not DOM interactions. No business logic or assertions live inside page objects.
+Each page extends `BasePage`. All locators are `public readonly`. Page objects contain both actions and domain-specific assertion methods (e.g. `verifyProductCard`, `assertProductDetails`, `verifyPriceSummary`). Assertion methods use native Playwright matchers and `Promise.all` for parallel checks.
+
+### Types
+
+Shared TypeScript types are stored in `types/` and imported via the `@types-app/*` alias:
+
+- `Product` - `{ name, price, description, image }`
+- `ShippingInfo` - `{ firstName, lastName, postalCode }`
 
 ### Components
 
-Reusable UI pieces that appear across multiple pages are extracted into `components/`. All three components are composed into page objects as `public readonly` properties:
+Reusable UI pieces that appear across multiple pages are extracted into `components/`. Composed into page objects as `public readonly` properties:
 
 - `CartBadgeComponent`
 - `CartItemsComponent`
