@@ -7,7 +7,7 @@ test.describe('Checkout', () => {
 
   test.beforeEach(async ({ loginPage, productsPage }) => {
     await loginPage.open();
-    await loginPage.login(usersData.standard.username, usersData.standard.password);
+    await loginPage.login(usersData.standard);
     for (const product of cartProducts) {
       await productsPage.addToCart(product.name);
     }

@@ -4,7 +4,7 @@ import { usersData, productsData, urlsData } from '@data/index';
 test.describe('Burger Menu', () => {
   test.beforeEach(async ({ loginPage }) => {
     await loginPage.open();
-    await loginPage.login(usersData.standard.username, usersData.standard.password);
+    await loginPage.login(usersData.standard);
   });
 
   test('should navigate to About page via burger menu', async ({ productsPage, page }) => {

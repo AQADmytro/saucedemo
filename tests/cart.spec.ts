@@ -4,7 +4,7 @@ import { usersData, productsData, urlsData } from '@data/index';
 test.describe('Cart', () => {
   test.beforeEach(async ({ loginPage }) => {
     await loginPage.open();
-    await loginPage.login(usersData.standard.username, usersData.standard.password);
+    await loginPage.login(usersData.standard);
   });
 
   test('should manage cart items end-to-end  | @smoke', async ({ productsPage, cartPage, page }) => {

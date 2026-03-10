@@ -8,7 +8,7 @@ test.describe('Authentication', () => {
 
   test('should login and logout successfully | @smoke', async ({ loginPage, productsPage, page }) => {
     await test.step('Login with valid credentials', async () => {
-      await loginPage.login(usersData.standard.username, usersData.standard.password);
+      await loginPage.login(usersData.standard);
       await expect(page).toHaveURL(urlsData.products);
     });
 
@@ -19,10 +19,10 @@ test.describe('Authentication', () => {
     });
   });
 
-  loginErrorCases.forEach(({ title, username, password, expectedError }) => {
+  loginErrorCases.forEach(({ title, user, expectedError }) => {
     test(`should show error for ${title}`, async ({ loginPage }) => {
       await test.step('Submit login form', async () => {
-        await loginPage.login(username, password);
+        await loginPage.login(user);
       });
 
       await test.step('Verify error message', async () => {
