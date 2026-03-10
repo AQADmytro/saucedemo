@@ -16,7 +16,8 @@
       "@fixtures/*": ["fixtures/*"],
       "@data/*": ["data/*"],
       "@components/*": ["components/*"],
-      "@utils/*": ["utils/*"]
+      "@utils/*": ["utils/*"],
+      "@types-app/*": ["types/*"]
     }
   },
   "include": ["**/*.ts"],

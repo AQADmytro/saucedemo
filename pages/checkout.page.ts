@@ -1,22 +1,26 @@
-import { Locator, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 import { CartItemsComponent, CartBadgeComponent } from '@components/index';
+import { BasePage } from './base.page';
+import { calculateSubtotal, calculateTax, calculateTotal, formatPrice } from '@utils/price.helper';
+import { ShippingInfo } from '@types-app/checkout.type';
 
-export class CheckoutPage {
+export class CheckoutPage extends BasePage {
   public readonly items: CartItemsComponent;
   public readonly cartBadge: CartBadgeComponent;
-  private readonly firstNameInput: Locator;
-  private readonly lastNameInput: Locator;
-  private readonly postalCodeInput: Locator;
-  private readonly continueButton: Locator;
-  private readonly finishButton: Locator;
-  private readonly errorMessage: Locator;
-  private readonly summarySubtotal: Locator;
-  private readonly summaryTax: Locator;
-  private readonly summaryTotal: Locator;
-  private readonly completeHeader: Locator;
-  private readonly backHomeButton: Locator;
+  public readonly firstNameInput: Locator;
+  public readonly lastNameInput: Locator;
+  public readonly postalCodeInput: Locator;
+  public readonly continueButton: Locator;
+  public readonly finishButton: Locator;
+  public readonly errorMessage: Locator;
+  public readonly summarySubtotal: Locator;
+  public readonly summaryTax: Locator;
+  public readonly summaryTotal: Locator;
+  public readonly completeHeader: Locator;
+  public readonly backHomeButton: Locator;
 
   constructor(page: Page) {
+    super(page);
     this.items = new CartItemsComponent(page);
     this.cartBadge = new CartBadgeComponent(page);
     this.firstNameInput = page.locator('[data-test="firstName"]');
@@ -32,7 +36,7 @@ export class CheckoutPage {
     this.backHomeButton = page.locator('[data-test="back-to-products"]');
   }
 
-  async fillShippingInfo(info: { firstName: string; lastName: string; postalCode: string }): Promise<void> {
+  async fillShippingInfo(info: ShippingInfo): Promise<void> {
     await this.firstNameInput.fill(info.firstName);
     await this.lastNameInput.fill(info.lastName);
     await this.postalCodeInput.fill(info.postalCode);
@@ -46,24 +50,13 @@ export class CheckoutPage {
     await this.finishButton.click();
   }
 
-  async getErrorMessage(): Promise<string> {
-    return this.errorMessage.innerText();
-  }
-
-  async getSubtotal(): Promise<string> {
-    return this.summarySubtotal.innerText();
-  }
-
-  async getTax(): Promise<string> {
-    return this.summaryTax.innerText();
-  }
-
-  async getTotal(): Promise<string> {
-    return this.summaryTotal.innerText();
-  }
-
-  async getCompleteHeader(): Promise<string> {
-    return this.completeHeader.innerText();
+  async verifyPriceSummary(prices: string[]): Promise<void> {
+    const subtotal = calculateSubtotal(prices);
+    await Promise.all([
+      expect(this.summarySubtotal).toContainText(formatPrice(subtotal)),
+      expect(this.summaryTax).toContainText(formatPrice(calculateTax(subtotal))),
+      expect(this.summaryTotal).toContainText(formatPrice(calculateTotal(subtotal))),
+    ]);
   }
 
   async backToProducts(): Promise<void> {

@@ -1,21 +1,20 @@
 import { test, expect } from '@fixtures/fixtures';
-import { usersData, loginErrorCases, urlsData } from '@data/index';
+import { usersData, loginErrorCases } from '@data/index';
 
 test.describe('Authentication', () => {
   test.beforeEach(async ({ loginPage }) => {
     await loginPage.open();
   });
 
-  test('should login and logout successfully | @smoke', async ({ loginPage, productsPage, page }) => {
+  test('should login and logout successfully | @smoke', async ({ loginPage, productsPage }) => {
     await test.step('Login with valid credentials', async () => {
       await loginPage.login(usersData.standard);
-      await expect(page).toHaveURL(urlsData.products);
+      await expect(productsPage.title).toHaveText('Products');
     });
 
     await test.step('Open burger menu, logout and verify login form', async () => {
       await productsPage.menu.logout();
-      await expect(page).toHaveURL(urlsData.login);
-      expect(await loginPage.isLoginFormVisible()).toBe(true);
+      await expect(loginPage.loginForm).toBeVisible();
     });
   });
 
@@ -26,7 +25,7 @@ test.describe('Authentication', () => {
       });
 
       await test.step('Verify error message', async () => {
-        expect(await loginPage.getErrorMessage()).toContain(expectedError);
+        await expect(loginPage.errorMessage).toHaveText(expectedError);
       });
     });
   });

@@ -1,14 +1,15 @@
 import { Locator, Page } from '@playwright/test';
-import { type User } from '@data/index';
+import { BasePage } from './base.page';
 
-export class LoginPage {
-  private readonly usernameInput: Locator;
-  private readonly passwordInput: Locator;
-  private readonly loginButton: Locator;
-  private readonly errorMessage: Locator;
-  private readonly loginForm: Locator;
+export class LoginPage extends BasePage {
+  public readonly usernameInput: Locator;
+  public readonly passwordInput: Locator;
+  public readonly loginButton: Locator;
+  public readonly errorMessage: Locator;
+  public readonly loginForm: Locator;
 
-  constructor(private readonly page: Page) {
+  constructor(page: Page) {
+    super(page);
     this.usernameInput = page.locator('[data-test="username"]');
     this.passwordInput = page.locator('[data-test="password"]');
     this.loginButton = page.locator('[data-test="login-button"]');
@@ -20,17 +21,9 @@ export class LoginPage {
     await this.page.goto('/');
   }
 
-  async login(user: { username: string; password: string; }): Promise<void> {
+  async login(user: { username: string; password: string }): Promise<void> {
     await this.usernameInput.fill(user.username);
     await this.passwordInput.fill(user.password);
     await this.loginButton.click();
-  }
-
-  async getErrorMessage(): Promise<string> {
-    return this.errorMessage.innerText();
-  }
-
-  isLoginFormVisible(): Promise<boolean> {
-    return this.loginForm.isVisible();
   }
 }

@@ -69,13 +69,13 @@ npm run test:headed             # all tests (with browser)
 
 ## Test Coverage
 
-| Area           | Smoke | Scenarios                                                                                                      |
-| -------------- | :---: | -------------------------------------------------------------------------------------------------------------- |
-| Authentication |  ✅   | Login/logout e2e, locked out user, empty fields, invalid credentials                                           |
+| Area           | Smoke | Scenarios                                                                                                       |
+| -------------- | :---: | --------------------------------------------------------------------------------------------------------------- |
+| Authentication |  ✅   | Login/logout e2e, locked out user, empty fields, invalid credentials                                            |
 | Products       |  ✅   | Product card details, product detail page (attributes, add/remove cart, back navigation), sorting by name/price |
 | Cart           |  ✅   | Add/remove items, badge count, verify price and description, continue shopping                                  |
-| Checkout       |  ✅   | Full flow, validation errors (first/last name, postal code), order summary, back to products                   |
-| Burger Menu    |       | About page navigation, all items link, reset app state                                                         |
+| Checkout       |  ✅   | Full flow, validation errors (first/last name, postal code), order summary, back to products                    |
+| Burger Menu    |       | About page navigation, all items link, reset app state                                                          |
 
 ## Architecture
 
@@ -114,14 +114,14 @@ npm run format:check  # Prettier check
 
 - **No tests for broken users.**
 
-- **No visual regression testing.** 
+- **No visual regression testing.**
 
 - **No mobile / responsive coverage.**
 
-- **No API testing.** 
+- **No API testing.**
 
-- **No accessibility testing.** 
+- **No accessibility testing.**
 
-- **No performance assertions.** 
+- **No performance assertions.**
 
-- **Retries are set to 1.** 
+- **Retries are set to 1.**

@@ -1,4 +1,5 @@
 # Bug Report - SauceDemo
+
 ---
 
 ## 🔴 Critical

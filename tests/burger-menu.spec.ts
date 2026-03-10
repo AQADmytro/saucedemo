@@ -1,5 +1,5 @@
 import { test, expect } from '@fixtures/fixtures';
-import { usersData, productsData, urlsData } from '@data/index';
+import { usersData, productsData } from '@data/index';
 
 test.describe('Burger Menu', () => {
   test.beforeEach(async ({ loginPage }) => {
@@ -14,11 +14,11 @@ test.describe('Burger Menu', () => {
     });
 
     await test.step('Verify navigation to Sauce Labs website', async () => {
-      await expect(page).toHaveURL(urlsData.sauceLabs);
+      await expect(page).toHaveTitle(/Sauce Labs/);
     });
   });
 
-  test('should navigate to all items from via menu', async ({ productsPage, page }) => {
+  test('should navigate to all items from via menu', async ({ productsPage }) => {
     await test.step('Navigate to cart page', async () => {
       await productsPage.cartBadge.openCart();
     });
@@ -29,14 +29,14 @@ test.describe('Burger Menu', () => {
     });
 
     await test.step('Verify user is redirected to the products page', async () => {
-      await expect(page).toHaveURL(urlsData.products);
+      await expect(productsPage.title).toHaveText('Products');
     });
   });
 
   test('should reset app state via burger menu', async ({ productsPage }) => {
     await test.step('Add a product to the cart', async () => {
       await productsPage.addToCart(productsData.boltTShirt.name);
-      expect(await productsPage.cartBadge.getCount()).toBe('1');
+      await expect(productsPage.cartBadge.badge).toHaveText('1');
     });
 
     await test.step('Open burger menu and reset app state', async () => {
@@ -44,7 +44,7 @@ test.describe('Burger Menu', () => {
     });
 
     await test.step('Verify cart is cleared', async () => {
-      expect(await productsPage.cartBadge.isCartBadgeVisible()).toBe(false);
+      await expect(productsPage.cartBadge.badge).toBeHidden();
     });
   });
 });

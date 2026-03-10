@@ -1,29 +1,33 @@
-import { Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
+import { Product } from '@types-app/product.type';
 
 export class CartItemsComponent {
-  private readonly items;
+  public readonly item: Locator;
+  public readonly itemName: Locator;
 
   constructor(page: Page) {
-    this.items = page.locator('.cart_item');
+    this.item = page.locator('.cart_item');
+    this.itemName = this.item.locator('.inventory_item_name');
   }
 
-  async getCartItemCount(): Promise<number> {
-    return this.items.count();
+  itemPrice(productName: string): Locator {
+    return this.item.filter({ hasText: productName }).locator('.inventory_item_price');
   }
 
-  async getItemNames(): Promise<string[]> {
-    return this.items.locator('.inventory_item_name').allInnerTexts();
+  itemDescription(productName: string): Locator {
+    return this.item.filter({ hasText: productName }).locator('.inventory_item_desc');
   }
 
-  async getItemPrice(productName: string): Promise<string> {
-    return this.items.filter({ hasText: productName }).locator('.inventory_item_price').innerText();
-  }
-
-  async getItemDescription(productName: string): Promise<string> {
-    return this.items.filter({ hasText: productName }).locator('.inventory_item_desc').innerText();
+  async verifyProducts(products: Product[]): Promise<void> {
+    await Promise.all(
+      products.flatMap((product) => [
+        expect(this.itemPrice(product.name)).toHaveText(product.price),
+        expect(this.itemDescription(product.name)).toHaveText(product.description),
+      ]),
+    );
   }
 
   async removeItem(productName: string): Promise<void> {
-    await this.items.filter({ hasText: productName }).locator('[data-test^="remove"]').click();
+    await this.item.filter({ hasText: productName }).locator('[data-test^="remove"]').click();
   }
 }

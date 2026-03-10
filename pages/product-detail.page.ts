@@ -1,17 +1,20 @@
-import { Locator, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 import { CartBadgeComponent } from '@components/index';
+import { BasePage } from './base.page';
+import { Product } from '@types-app/product.type';
 
-export class ProductDetailPage {
+export class ProductDetailPage extends BasePage {
   public readonly cartBadge: CartBadgeComponent;
-  private readonly name: Locator;
-  private readonly description: Locator;
-  private readonly price: Locator;
-  private readonly image: Locator;
-  private readonly addToCartButton: Locator;
-  private readonly removeButton: Locator;
-  private readonly backButton: Locator;
+  public readonly name: Locator;
+  public readonly description: Locator;
+  public readonly price: Locator;
+  public readonly image: Locator;
+  public readonly addToCartButton: Locator;
+  public readonly removeButton: Locator;
+  public readonly backButton: Locator;
 
   constructor(page: Page) {
+    super(page);
     this.cartBadge = new CartBadgeComponent(page);
     this.name = page.locator('[data-test="inventory-item-name"]');
     this.description = page.locator('[data-test="inventory-item-desc"]');
@@ -20,22 +23,6 @@ export class ProductDetailPage {
     this.addToCartButton = page.locator('[data-test^="add-to-cart"]');
     this.removeButton = page.locator('[data-test^="remove"]');
     this.backButton = page.locator('[data-test="back-to-products"]');
-  }
-
-  getName(): Promise<string> {
-    return this.name.innerText();
-  }
-
-  getDescription(): Promise<string> {
-    return this.description.innerText();
-  }
-
-  getPrice(): Promise<string> {
-    return this.price.innerText();
-  }
-
-  async getImage(): Promise<string> {
-    return (await this.image.getAttribute('src')) ?? '';
   }
 
   async addToCart(): Promise<void> {
@@ -48,5 +35,14 @@ export class ProductDetailPage {
 
   async backToProducts(): Promise<void> {
     await this.backButton.click();
+  }
+
+  async assertProductDetails(product: Product): Promise<void> {
+    await Promise.all([
+      expect(this.name).toHaveText(product.name),
+      expect(this.description).toHaveText(product.description),
+      expect(this.price).toHaveText(product.price),
+      expect(this.image).toHaveAttribute('src', new RegExp(product.image)),
+    ]);
   }
 }

@@ -1,10 +1,10 @@
 import { Locator, Page } from '@playwright/test';
 
 export class MenuComponent {
-  private readonly menuOpenButton: Locator;
-  private readonly menuCloseButton: Locator;
-  private readonly menuContainer: Locator;
-  private readonly menuItem: Locator;
+  public readonly menuOpenButton: Locator;
+  public readonly menuCloseButton: Locator;
+  public readonly menuContainer: Locator;
+  public readonly menuItem: Locator;
 
   constructor(page: Page) {
     this.menuOpenButton = page.locator('#react-burger-menu-btn');

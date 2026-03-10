@@ -1,3 +1,4 @@
+export { BasePage } from './base.page';
 export { LoginPage } from './login.page';
 export { ProductsPage } from './products.page';
 export { ProductDetailPage } from './product-detail.page';
